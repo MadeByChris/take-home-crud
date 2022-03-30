@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "export DATABASE_URL=file:./dev.db && ts-node-dev --transpile-only --respawn src/index.ts",
+    "dev": "ts-node-dev --transpile-only --respawn src/index.ts",
     "start": "ts-node --transpile-only src/index.ts",
     "seed": "ts-node prisma/seed.ts"
   },

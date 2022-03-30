@@ -1,6 +1,6 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "display": "Default",
+  "display": "Backend.js",
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",
