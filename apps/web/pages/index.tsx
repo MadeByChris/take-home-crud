@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import Table from "../components/posts/table";
 import { GetPostsResult } from "../interface/post";
 import Spinner from "../components/Spinner";
+import CreatePostForm from "../components/posts/create";
 
 const GET_POSTS = gql`
   query Query {
@@ -43,7 +44,7 @@ const Home = () => {
         </div>
       </div>
       {data.getPosts && <Table posts={data.getPosts} />}
-      {displayForm && <div>Create post form</div>}
+      {displayForm && <CreatePostForm/>}
     </div>
   );
 };
