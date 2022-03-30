@@ -61,6 +61,10 @@ User should be able to navigate back to the initial page.
 - The project has a `graphql.schema` available with a basic CRUD structure. The candidate is free to make any modifications as they desire.
 - CSS (tailwind) is not a requirement. When working on the front end, feel free to just use basic HTML structure.
 
+# Deliverable
+
+Create a pull request againts main branch.
+
 ## Useful Links
 
 Useful links about all libraries used:
