@@ -6,3 +6,7 @@ export interface Post {
 export interface GetPostsResult {
   getPosts: Post[];
 }
+
+// export interface DeletePost {
+//   id: number;
+// }

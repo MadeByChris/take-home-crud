@@ -13,7 +13,15 @@ export const createPost = async (content: string) => {
     },
   });
 };
+//@ts-ignore
+export const deletePost = async (id) => {
+  console.log(id);
+  return await prisma.post.delete({
+    //@ts-ignore
+    where: {
+      id: parseInt(id)
+    }
+  })
+};
 
-export const deletePost = () => {};
-
-export const getPostById = () => {};
+export const getPostById = () => { };
