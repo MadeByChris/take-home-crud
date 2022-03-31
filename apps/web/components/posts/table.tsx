@@ -62,7 +62,9 @@ const Table = ({ posts }: TableProps) => {
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                       <button type='button'
                               className="text-red-600 hover:text-indigo-900"
-                              onClick={() => deletePost({ variables: { deletePostId: post.id }})}>
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deletePost({ variables: { deletePostId: post.id }})}}>
                         Delete<span className="sr-only">, {post.id}</span>
                       </button>
                     </td>
