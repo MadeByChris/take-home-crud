@@ -6,7 +6,13 @@ export const getAllPosts = async () => {
   return await prisma.post.findMany();
 };
 
-export const createPost = () => {};
+export const createPost = async (content: string) => {
+  return await prisma.post.create({
+    data: {
+      content: content
+    }
+  });
+};
 
 export const deletePost = () => {};
 

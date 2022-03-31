@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { gql, useQuery } from "@apollo/client";
+import { gql, useQuery, useMutation } from "@apollo/client";
 
 import Table from "../components/posts/table";
-import { GetPostsResult } from "../interface/post";
+import { CreatePostVariables, GetPostsResult, Post } from "../interface/post";
 import Spinner from "../components/Spinner";
 import CreatePostForm from "../components/posts/create";
 
 const GET_POSTS = gql`
-  query Query {
+  query GetPosts {
     getPosts {
       id
       content
@@ -15,11 +15,27 @@ const GET_POSTS = gql`
   }
 `;
 
-const Home = () => {
-  const { data, loading } = useQuery<GetPostsResult>(GET_POSTS);
-  const [displayForm, setForm] = useState(false);
+const CREATE_POST = gql`
+  mutation CreatePost($content: String!) {
+    createPost(content: $content) {
+      id
+      content
+    }
+  }
+`;
 
-  if (loading) {
+const Home = () => {
+  const { data, loading: getPostsLoading } = useQuery<GetPostsResult>(GET_POSTS);
+  const [createPost, { loading: createPostLoading }] = useMutation<Post, CreatePostVariables>(CREATE_POST, {
+    refetchQueries: [
+      GET_POSTS,
+      'GetPosts'
+    ]
+  });
+
+  const [displayForm, setDisplayForm] = useState(false);
+
+  if (getPostsLoading || createPostLoading) {
     return <Spinner />;
   }
 
@@ -36,7 +52,7 @@ const Home = () => {
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
             onClick={() => {
-              setForm(!displayForm);
+              setDisplayForm(!displayForm);
             }}
           >
             Create Post
@@ -44,7 +60,7 @@ const Home = () => {
         </div>
       </div>
       {data.getPosts && <Table posts={data.getPosts} />}
-      {displayForm && <CreatePostForm/>}
+      {displayForm && <CreatePostForm createPost={createPost} setDisplayForm={setDisplayForm}/>}
     </div>
   );
 };

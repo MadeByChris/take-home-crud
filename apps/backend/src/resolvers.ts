@@ -1,4 +1,8 @@
-import { getAllPosts } from "./services/post";
+import { createPost, getAllPosts } from "./services/post";
+
+interface CreatePostArgs {
+  content: string;
+}
 
 export const Query = {
   getPosts: async () => {
@@ -6,4 +10,8 @@ export const Query = {
   },
 };
 
-export const Mutation = {};
+export const Mutation = {
+  createPost: async (_: undefined, { content }: CreatePostArgs) => {
+    return await createPost(content);
+  }
+};

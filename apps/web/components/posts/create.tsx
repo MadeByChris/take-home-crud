@@ -1,13 +1,19 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
-const CreatePostForm = () => {
+interface CreatePostFormProps {
+  createPost: any
+  setDisplayForm: Dispatch<SetStateAction<boolean>>
+}
+
+const CreatePostForm = ({ createPost, setDisplayForm }: CreatePostFormProps) => {
   const [newPostContent, setNewPostContent] = useState('');
 
   return (
     <form onSubmit={ (e) => {
       e.preventDefault();
-      console.log(newPostContent);
-    } }>
+      createPost({ variables: { content: newPostContent } });
+      setDisplayForm(false);
+    }}>
       <div className="mx-4 sm:mx-6 lg:mx-8 my-4">
         <h1 className="text-2xl font-bold my-4">Create a Post</h1>
         <label className="mb-4" htmlFor="new-post-content"/>
