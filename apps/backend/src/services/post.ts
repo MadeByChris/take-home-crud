@@ -13,11 +13,9 @@ export const createPost = async (content: string) => {
     },
   });
 };
-//@ts-ignore
-export const deletePost = async (id) => {
+export const deletePost = async (id: string) => {
   console.log(id);
   return await prisma.post.delete({
-    //@ts-ignore
     where: {
       id: parseInt(id)
     }

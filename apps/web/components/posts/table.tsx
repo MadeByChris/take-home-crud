@@ -4,6 +4,25 @@ import { Post } from "../../interface/post";
 interface TableProps {
   posts: Post[];
 }
+const deletePost = (id : string) => {
+  let query = `mutation Mutation($deletePostId: ID!) {
+    deletePost(id: $deletePostId)
+  }`;
+  let deletePostId = id;
+  fetch('http://localhost:4001/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables: {
+        deletePostId,
+      }
+    })
+  })
+}
 
 const Table = ({ posts }: TableProps) => {
   const { push } = useRouter();
@@ -49,7 +68,7 @@ const Table = ({ posts }: TableProps) => {
                       {post.content}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      <button className="text-red-600 hover:text-indigo-900">
+                      <button className="text-red-600 hover:text-indigo-900" onClick={()=> {deletePost(post.id.toString())}}>
                         Delete<span className="sr-only">, {post.id}</span>
                       </button>
                     </td>
