@@ -1,31 +1,40 @@
+import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { Post } from "../../interface/post";
+import { GetPostsResult, Post } from "../../interface/post";
 
 interface TableProps {
   posts: Post[];
-}
-const deletePost = (id : string) => {
-  let query = `mutation Mutation($deletePostId: ID!) {
-    deletePost(id: $deletePostId)
-  }`;
-  let deletePostId = id;
-  fetch('http://localhost:4001/graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
-    body: JSON.stringify({
-      query,
-      variables: {
-        deletePostId,
-      }
-    })
-  })
+  gql
 }
 
-const Table = ({ posts }: TableProps) => {
+const Table = ({ posts, gql }: TableProps) => {
   const { push } = useRouter();
+  const [load, { data, loading }] = useLazyQuery<GetPostsResult>(gql);
+
+  const deletePost = (id: string) => {
+    let query = `mutation Mutation($deletePostId: ID!) {
+      deletePost(id: $deletePostId)
+    }`;
+    let deletePostId = id;
+    fetch('http://localhost:4001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        variables: {
+          deletePostId,
+        }
+      })
+    }).then(() => {
+      load();
+    });
+  }
+
+
+
   return (
     <div className="mt-8 flex flex-col">
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -56,19 +65,21 @@ const Table = ({ posts }: TableProps) => {
                 {posts.map((post) => (
                   <tr
                     key={post.id.toString()}
-                    onClick={() => {
-                      push({ pathname: "post/[id]", query: { id: "HELLO" } });
-                    }}
                     className="cursor-pointer"
                   >
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                       {post.id}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <td
+                      className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                      onClick={() => {
+                        push({ pathname: "post/[id]", query: { id: post.id.toString() } });
+                      }}
+                    >
                       {post.content}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      <button className="text-red-600 hover:text-indigo-900" onClick={()=> {deletePost(post.id.toString())}}>
+                      <button className="text-red-600 hover:text-indigo-900" onClick={() => { deletePost(post.id.toString()) }}>
                         Delete<span className="sr-only">, {post.id}</span>
                       </button>
                     </td>
