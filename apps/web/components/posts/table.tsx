@@ -73,7 +73,7 @@ const Table = ({ posts, gql }: TableProps) => {
                     <td
                       className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                       onClick={() => {
-                        push({ pathname: "post/[id]", query: { id: post.id.toString() } });
+                        push({ pathname: "post/[id]", query: { id: post.id.toString(), content: post.content.toString() } });
                       }}
                     >
                       {post.content}
