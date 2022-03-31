@@ -5,6 +5,7 @@ import { GetPostByIdResult, GetPostByIdVariables } from "../../interface/post";
 import Spinner from "../../components/Spinner";
 import { GET_POST_BY_ID } from "../../components/queries";
 
+
 const Post = () => {
   const { query, push } = useRouter();
   const postId = String(query.id);

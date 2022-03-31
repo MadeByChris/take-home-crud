@@ -16,16 +16,16 @@ export const Query = {
   getPosts: async () => {
     return await getAllPosts();
   },
-  getPostById: async (_: undefined, { id }: GetPostByIdArgs) => {
+  getPostById: async (parent: undefined, { id }: GetPostByIdArgs) => {
     return await getPostById(Number(id));
   }
 };
 
 export const Mutation = {
-  createPost: async (_: undefined, { content }: CreatePostArgs) => {
+  createPost: async (parent: undefined, { content }: CreatePostArgs) => {
     return await createPost(content);
   },
-  deletePost: async (_: undefined, { id }: DeletePostArgs) => {
+  deletePost: async (parent: undefined, { id }: DeletePostArgs) => {
     return await deletePost(Number(id));
   }
 };
