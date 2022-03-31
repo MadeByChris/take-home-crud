@@ -14,7 +14,15 @@ export const createPost = async (content: string) => {
   });
 };
 
-export const deletePost = () => {};
+// TODO: update schema so that delete returns the Post that was deleted
+//  this might require a migration
+export const deletePost = async (id: number) => {
+  return await prisma.post.delete({
+    where: {
+      id: id
+    }
+  })
+};
 
 export const getPostById = async (id: number) => {
   return await prisma.post.findUnique({
