@@ -1,4 +1,4 @@
-import { getAllPosts } from "./services/post";
+import { createPost, getAllPosts } from "./services/post";
 
 export const Query = {
   getPosts: async () => {
@@ -6,4 +6,10 @@ export const Query = {
   },
 };
 
-export const Mutation = {};
+export const Mutation = {
+  // TODO: remove ts-ignore
+  //@ts-ignore
+  createPost: async (_, args) => {
+    return await createPost(args.content);
+  }
+};

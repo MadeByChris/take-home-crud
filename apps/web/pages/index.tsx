@@ -4,6 +4,7 @@ import { gql, useQuery } from "@apollo/client";
 import Table from "../components/posts/table";
 import { GetPostsResult } from "../interface/post";
 import Spinner from "../components/Spinner";
+import { connect } from "http2";
 
 const GET_POSTS = gql`
   query Query {
@@ -14,6 +15,35 @@ const GET_POSTS = gql`
   }
 `;
 
+// Get post contents and send as a Post request to GraphQL endpoint
+const sendPost = () => {
+  let content = (document.getElementById("post-content") as HTMLInputElement).value;
+  let query = `mutation CreatePost($content: String!) {
+    createPost(content: $content) {
+      content
+    }
+  }`;
+
+  // Ensure post contains a value
+  if (content === null || content === undefined || content.trim() === "") return;
+  fetch('http://localhost:4001/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify({
+      query,
+      variables: {
+        content,
+      }
+    })
+  })
+    .then(r => r.json()) // Interpret as JSON
+    .then(data => {
+      console.log('data returned:', data) // Log response for now
+    });
+}
 const Home = () => {
   const { data, loading } = useQuery<GetPostsResult>(GET_POSTS);
   const [displayForm, setForm] = useState(false);
@@ -42,8 +72,13 @@ const Home = () => {
           </button>
         </div>
       </div>
-      {data.getPosts && <Table posts={data.getPosts} />}
-      {displayForm && <div>Create post form</div>}
+      {(data && data.getPosts && <Table posts={data.getPosts} />) || <></>}
+      {displayForm &&
+        <div id="post-form-container">
+          <textarea id="post-content" className="rounded-md border" ></textarea>
+          <button onClick={sendPost} className="rounded-md border">Post</button>
+        </div>
+      }
     </div>
   );
 };

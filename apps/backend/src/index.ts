@@ -4,6 +4,7 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
 
 import { Query, Mutation } from "./resolvers";
+import { PrismaClient, Prisma, prisma } from "@prisma/client";
 
 const main = async () => {
   const sources = await loadTypedefs(join(__dirname, "schema.graphql"), {
@@ -20,8 +21,8 @@ const main = async () => {
     },
   });
 
-  server.listen().then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`);
+  server.listen(4001).then(({ url }) => {
+    console.log(`🚀 Server ready at ${url}`); // Changed since port 4000 was occupied by Node.exe
   });
 };
 

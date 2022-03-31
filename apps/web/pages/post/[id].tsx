@@ -1,4 +1,5 @@
 const Post = () => {
+  
   return (
     <div className="mx-4 sm:mx-6 lg:mx-8 my-4">
       <h1 className="text-2xl font-bold my-4">ID goes here!</h1>
