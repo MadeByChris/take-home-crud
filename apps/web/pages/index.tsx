@@ -1,36 +1,17 @@
 import { useState } from "react";
-import { gql, useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 
 import Table from "../components/posts/table";
 import { CreatePostVariables, GetPostsResult, Post } from "../interface/post";
 import Spinner from "../components/Spinner";
 import CreatePostForm from "../components/posts/create";
+import { CREATE_POST, GET_POSTS } from "../components/queries";
 
-const GET_POSTS = gql`
-  query GetPosts {
-    getPosts {
-      id
-      content
-    }
-  }
-`;
-
-const CREATE_POST = gql`
-  mutation CreatePost($content: String!) {
-    createPost(content: $content) {
-      id
-      content
-    }
-  }
-`;
 
 const Home = () => {
   const { data, loading: getPostsLoading } = useQuery<GetPostsResult>(GET_POSTS);
   const [createPost, { loading: createPostLoading }] = useMutation<Post, CreatePostVariables>(CREATE_POST, {
-    refetchQueries: [
-      GET_POSTS,
-      'GetPosts'
-    ]
+    refetchQueries: [GET_POSTS]
   });
 
   const [displayForm, setDisplayForm] = useState(false);

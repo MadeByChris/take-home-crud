@@ -18,3 +18,7 @@ export interface GetPostByIdVariables {
 export interface CreatePostVariables {
   content: string;
 }
+
+export interface DeletePostVariables {
+  deletePostId: string;
+}

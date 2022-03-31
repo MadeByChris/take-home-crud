@@ -1,12 +1,23 @@
 import { useRouter } from "next/router";
-import { Post } from "../../interface/post";
+import { DeletePostVariables, Post } from "../../interface/post";
+import { useMutation } from "@apollo/client";
+import Spinner from "../Spinner";
+import { GET_POSTS, DELETE_POST } from "../queries";
 
 interface TableProps {
   posts: Post[];
 }
 
 const Table = ({ posts }: TableProps) => {
+  const [deletePost, { loading }] = useMutation<Post, DeletePostVariables>(DELETE_POST, {
+    refetchQueries: [GET_POSTS]
+  });
   const { push } = useRouter();
+
+  if (loading) {
+    return <Spinner/>
+  }
+
   return (
     <div className="mt-8 flex flex-col">
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -49,7 +60,12 @@ const Table = ({ posts }: TableProps) => {
                       {post.content}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      <button className="text-red-600 hover:text-indigo-900">
+                      <button type='button'
+                              className="text-red-600 hover:text-indigo-900"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deletePost({ variables: { deletePostId: post.id }});
+                              }}>
                         Delete<span className="sr-only">, {post.id}</span>
                       </button>
                     </td>
