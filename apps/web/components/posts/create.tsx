@@ -8,6 +8,7 @@ interface CreatePostFormProps {
 const CreatePostForm = ({ createPost, setDisplayForm }: CreatePostFormProps) => {
   const [newPostContent, setNewPostContent] = useState('');
 
+  // TODO: get rid of url changing on form submission
   return (
     <form onSubmit={ (e) => {
       e.preventDefault();

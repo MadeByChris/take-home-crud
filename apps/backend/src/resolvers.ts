@@ -1,13 +1,20 @@
-import { createPost, getAllPosts } from "./services/post";
+import { createPost, getAllPosts, getPostById } from "./services/post";
 
 interface CreatePostArgs {
   content: string;
+}
+
+interface GetPostByIdArgs {
+  id: string;
 }
 
 export const Query = {
   getPosts: async () => {
     return await getAllPosts();
   },
+  getPostById: async (_: undefined, { id }: GetPostByIdArgs) => {
+    return await getPostById(Number(id));
+  }
 };
 
 export const Mutation = {

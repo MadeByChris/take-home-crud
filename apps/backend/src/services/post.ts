@@ -16,4 +16,10 @@ export const createPost = async (content: string) => {
 
 export const deletePost = () => {};
 
-export const getPostById = () => {};
+export const getPostById = async (id: number) => {
+  return await prisma.post.findUnique({
+    where: {
+      id: id
+    }
+  });
+};

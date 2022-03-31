@@ -36,9 +36,9 @@ const Table = ({ posts }: TableProps) => {
               <tbody className="divide-y divide-gray-200 bg-white">
                 {posts.map((post) => (
                   <tr
-                    key={post.id.toString()}
+                    key={post.id}
                     onClick={() => {
-                      push({ pathname: "post/[id]", query: { id: "HELLO" } });
+                      push({ pathname: "post/[id]", query: { id: post.id } });
                     }}
                     className="cursor-pointer"
                   >
