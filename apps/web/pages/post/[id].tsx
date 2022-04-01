@@ -35,7 +35,12 @@ const Post = () => {
     });
   }
   useEffect(() => {
-    getPost(router.query.id.toString());
+    if(router.query.id) {
+      getPost(router.query.id.toString());
+    } else {
+      const id = window.location.pathname.replace("/post/", "");
+      getPost(id)
+    }
   }, []);
 
   return (
