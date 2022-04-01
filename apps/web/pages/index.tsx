@@ -4,7 +4,6 @@ import { gql, useLazyQuery, useQuery } from "@apollo/client";
 import Table from "../components/posts/table";
 import { GetPostsResult } from "../interface/post";
 import Spinner from "../components/Spinner";
-import { connect } from "http2";
 
 const GET_POSTS = gql`
   query Query {
@@ -19,6 +18,7 @@ const Home = () => {
   // Using Lazy Query to allow for component update on CRUD completion
   const [load, { data, loading }] = useLazyQuery<GetPostsResult>(GET_POSTS);
 
+  // Load Table on page load
   useEffect(() => {
     load();
   }, []);
@@ -49,10 +49,7 @@ const Home = () => {
         }
       })
     })
-      .then(r => r.json()) // Interpret as JSON
-      .then(returnData => {
-        console.log('data returned:', returnData) // Log response for now
-        console.log('data:', data) // Log response for now
+      .then(() => {
         load();
         return;
       });

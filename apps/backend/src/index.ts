@@ -4,7 +4,6 @@ import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 import { join } from "path";
 
 import { Query, Mutation } from "./resolvers";
-import { PrismaClient, Prisma, prisma } from "@prisma/client";
 
 const main = async () => {
   const sources = await loadTypedefs(join(__dirname, "schema.graphql"), {

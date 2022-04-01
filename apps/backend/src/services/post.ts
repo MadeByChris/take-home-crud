@@ -13,6 +13,7 @@ export const createPost = async (content: string) => {
     },
   });
 };
+
 export const deletePost = async (id: string) => {
   return await prisma.post.delete({
     where: {
@@ -22,7 +23,6 @@ export const deletePost = async (id: string) => {
 };
 
 export const getPostById = async (id: string) => {
-  console.log("finding by id");
   return await prisma.post.findUnique({
     where: {
       id: parseInt(id)

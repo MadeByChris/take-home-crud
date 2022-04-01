@@ -9,6 +9,7 @@ interface TableProps {
 
 const Table = ({ posts, gql }: TableProps) => {
   const { push } = useRouter();
+  // Use lazy Query to update on delete
   const [load, { data, loading }] = useLazyQuery<GetPostsResult>(gql);
 
   const deletePost = (id: string) => {
@@ -29,7 +30,7 @@ const Table = ({ posts, gql }: TableProps) => {
         }
       })
     }).then(() => {
-      load();
+      load(); // Update Component with useLazyQuery when delete completes
     });
   }
 
@@ -53,7 +54,6 @@ const Table = ({ posts, gql }: TableProps) => {
                   >
                     Content
                   </th>
-
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                     <span className="sr-only">Edit</span>
                   </th>

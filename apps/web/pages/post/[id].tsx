@@ -1,16 +1,14 @@
-import { QueryInfo } from "@apollo/client/core/QueryInfo";
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react";
 
 const Post = () => {
   const router = useRouter();
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(""); // Set content to blank until response from db
 
-  const getPost = (postId: string) => {
+  const getPostById = (postId: string) => {
     console.log("IN GET POST")
     let query = `query GetPostById($getPostById: ID!) {
       getPostById(id: $getPostById) {
-        id
         content
       }
     }`;
@@ -28,18 +26,23 @@ const Post = () => {
         }
       })
     })
-      .then(r => r.json()) // Interpret as JSON
+      .then(r => r.json()) // Interpret Response type as JSON
       .then(returnData => {
         console.log(returnData);
+        // Use useState hook to update content value with response
         setContent(returnData.data.getPostById.content);
     });
   }
+
+  // Trigger on page load
   useEffect(() => {
+    // If router.query.id exists use the id
     if(router.query.id) {
-      getPost(router.query.id.toString());
+      getPostById(router.query.id.toString());
+    // If router.query.id unset parse the url for the id
     } else {
       const id = window.location.pathname.replace("/post/", "");
-      getPost(id)
+      getPostById(id)
     }
   }, []);
 
