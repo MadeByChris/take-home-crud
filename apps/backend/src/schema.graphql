@@ -10,5 +10,5 @@ type Query {
 
 type Mutation {
   createPost(content: String!): Post!
-  deletePost(id: ID!): Int!
+  deletePost(id: ID!): Post!
 }
