@@ -33,8 +33,6 @@ const Table = ({ posts, gql }: TableProps) => {
     });
   }
 
-
-
   return (
     <div className="mt-8 flex flex-col">
       <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -73,7 +71,7 @@ const Table = ({ posts, gql }: TableProps) => {
                     <td
                       className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
                       onClick={() => {
-                        push({ pathname: "post/[id]", query: { id: post.id.toString(), content: post.content.toString() } });
+                        push({ pathname: "post/[id]", query: { id: post.id.toString()} });
                       }}
                     >
                       {post.content}

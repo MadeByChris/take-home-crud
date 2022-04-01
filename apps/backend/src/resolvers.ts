@@ -1,9 +1,14 @@
-import { createPost, deletePost, getAllPosts } from "./services/post";
+import { createPost, deletePost, getAllPosts, getPostById } from "./services/post";
 
 export const Query = {
   getPosts: async () => {
     return await getAllPosts();
   },
+  //@ts-ignore
+  getPostById: async (_, args) => {
+    console.log("getting by ID from resovler");
+    return await getPostById(args.id);
+  }
 };
 
 export const Mutation = {

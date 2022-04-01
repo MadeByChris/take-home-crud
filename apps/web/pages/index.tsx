@@ -18,6 +18,7 @@ const GET_POSTS = gql`
 const Home = () => {
   // Using Lazy Query to allow for component update on CRUD completion
   const [load, { data, loading }] = useLazyQuery<GetPostsResult>(GET_POSTS);
+
   useEffect(() => {
     load();
   }, []);
