@@ -1,21 +1,37 @@
+import { useLazyQuery } from "@apollo/client";
 import { useRouter } from "next/router";
-import { DeletePostVariables, Post } from "../../interface/post";
-import { useMutation } from "@apollo/client";
-import Spinner from "../Spinner";
-import { GET_POSTS, DELETE_POST } from "../queries";
+import { GetPostsResult, Post } from "../../interface/post";
 
 interface TableProps {
   posts: Post[];
+  gql
 }
 
-const Table = ({ posts }: TableProps) => {
-  const [deletePost, { loading }] = useMutation<Post, DeletePostVariables>(DELETE_POST, {
-    refetchQueries: [GET_POSTS]
-  });
+const Table = ({ posts, gql }: TableProps) => {
   const { push } = useRouter();
+  // Use lazy Query to update on delete
+  const [load, { data, loading }] = useLazyQuery<GetPostsResult>(gql);
 
-  if (loading) {
-    return <Spinner/>
+  const deletePost = (id: string) => {
+    let query = `mutation Mutation($deletePostId: ID!) {
+      deletePost(id: $deletePostId)
+    }`;
+    let deletePostId = id;
+    fetch('http://localhost:4001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        variables: {
+          deletePostId,
+        }
+      })
+    }).then(() => {
+      load(); // Update Component with useLazyQuery when delete completes
+    });
   }
 
   return (
@@ -38,7 +54,6 @@ const Table = ({ posts }: TableProps) => {
                   >
                     Content
                   </th>
-
                   <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                     <span className="sr-only">Edit</span>
                   </th>
@@ -47,24 +62,22 @@ const Table = ({ posts }: TableProps) => {
               <tbody className="divide-y divide-gray-200 bg-white">
                 {posts.map((post) => (
                   <tr
-                    key={post.id}
-                    onClick={() => {
-                      push({ pathname: "post/[id]", query: { id: post.id } });
-                    }}
+                    key={post.id.toString()}
                     className="cursor-pointer"
                   >
                     <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">
                       {post.id}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <td
+                      className="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                      onClick={() => {
+                        push({ pathname: "post/[id]", query: { id: post.id.toString()} });
+                      }}
+                    >
                       {post.content}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      <button type='button'
-                              className="text-red-600 hover:text-indigo-900"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                deletePost({ variables: { deletePostId: post.id }})}}>
+                      <button className="text-red-600 hover:text-indigo-900" onClick={() => { deletePost(post.id.toString()) }}>
                         Delete<span className="sr-only">, {post.id}</span>
                       </button>
                     </td>

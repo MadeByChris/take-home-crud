@@ -20,8 +20,8 @@ const main = async () => {
     },
   });
 
-  server.listen().then(({ url }) => {
-    console.log(`🚀 Server ready at ${url}`);
+  server.listen(4001).then(({ url }) => {
+    console.log(`🚀 Server ready at ${url}`); // Changed since port 4000 was occupied by Node.exe
   });
 };
 

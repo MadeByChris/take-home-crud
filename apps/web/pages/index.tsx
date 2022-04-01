@@ -1,25 +1,63 @@
-import { useState } from "react";
-import { useQuery, useMutation } from "@apollo/client";
+import { useEffect, useState } from "react";
+import { gql, useLazyQuery, useQuery } from "@apollo/client";
 
 import Table from "../components/posts/table";
-import { CreatePostVariables, GetPostsResult, Post } from "../interface/post";
+import { GetPostsResult } from "../interface/post";
 import Spinner from "../components/Spinner";
-import CreatePostForm from "../components/posts/create";
-import { CREATE_POST, GET_POSTS } from "../components/queries";
 
+const GET_POSTS = gql`
+  query Query {
+    getPosts {
+      id
+      content
+    }
+  }
+`;
 
 const Home = () => {
-  const { data, loading: getPostsLoading } = useQuery<GetPostsResult>(GET_POSTS);
-  const [createPost, { loading: createPostLoading }] = useMutation<Post, CreatePostVariables>(CREATE_POST, {
-    refetchQueries: [GET_POSTS]
-  });
+  // Using Lazy Query to allow for component update on CRUD completion
+  const [load, { data, loading }] = useLazyQuery<GetPostsResult>(GET_POSTS);
 
-  const [displayForm, setDisplayForm] = useState(false);
+  // Load Table on page load
+  useEffect(() => {
+    load();
+  }, []);
+  const [displayForm, setForm] = useState(false);
 
-  if (getPostsLoading || createPostLoading) {
-    return <Spinner />;
+
+  // Get post contents and send as a Post request to GraphQL endpoint
+  const sendPost = async () => {
+    let content = (document.getElementById("post-content") as HTMLInputElement).value;
+    let query = `mutation CreatePost($content: String!) {
+    createPost(content: $content) {
+      content
+    }
+  }`;
+
+    // Ensure post contains a value
+    if (content === null || content === undefined || content.trim() === "") return;
+    fetch('http://localhost:4001/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({
+        query,
+        variables: {
+          content,
+        }
+      })
+    })
+      .then(() => {
+        load();
+        return;
+      });
   }
 
+  if (loading) {
+    return <Spinner />;
+  }
   return (
     <div className="mx-4 sm:mx-6 lg:mx-8">
       <div className="sm:flex sm:items-center">
@@ -33,15 +71,27 @@ const Home = () => {
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
             onClick={() => {
-              setDisplayForm(!displayForm);
+              setForm(!displayForm);
             }}
           >
             Create Post
           </button>
         </div>
       </div>
-      {data.getPosts && <Table posts={data.getPosts} />}
-      {displayForm && <CreatePostForm createPost={createPost} setDisplayForm={setDisplayForm}/>}
+      {(data && data.getPosts && <Table posts={data.getPosts} gql={GET_POSTS}/>) || <></>}
+      {displayForm &&
+        <div id="post-form-container">
+          <textarea id="post-content" className="rounded-md border" ></textarea>
+          <button
+            onClick={() => {
+              sendPost()
+            }}
+            className="rounded-md border"
+          >
+            Post
+          </button>
+        </div>
+      }
     </div>
   );
 };

@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-
 const prisma = new PrismaClient();
 
 export const getAllPosts = async () => {
@@ -9,23 +8,24 @@ export const getAllPosts = async () => {
 export const createPost = async (content: string) => {
   return await prisma.post.create({
     data: {
-      content: content
-    }
+      content:
+        content,
+    },
   });
 };
 
-export const deletePost = async (id: number) => {
+export const deletePost = async (id: string) => {
   return await prisma.post.delete({
     where: {
-      id: id
+      id: parseInt(id)
     }
   })
 };
 
-export const getPostById = async (id: number) => {
+export const getPostById = async (id: string) => {
   return await prisma.post.findUnique({
     where: {
-      id: id
+      id: parseInt(id)
     }
   });
 };
