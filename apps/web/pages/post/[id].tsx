@@ -6,7 +6,6 @@ const Post = () => {
   const [content, setContent] = useState(""); // Set content to blank until response from db
 
   const getPostById = (postId: string) => {
-    console.log("IN GET POST")
     let query = `query GetPostById($getPostById: ID!) {
       getPostById(id: $getPostById) {
         content
@@ -28,7 +27,6 @@ const Post = () => {
     })
       .then(r => r.json()) // Interpret Response type as JSON
       .then(returnData => {
-        console.log(returnData);
         // Use useState hook to update content value with response
         setContent(returnData.data.getPostById.content);
     });
